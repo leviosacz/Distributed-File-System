@@ -15,12 +15,12 @@ public class DistributedFileSystemApplication {
         MetadataService metadataService = new MetadataService();
 
         // Schedule the health check task to run every 5 minutes
-//        metadataService.scheduler.scheduleAtFixedRate(
-//                metadataService::checkWorkerNodeHealth,
-//                0, // initial delay
-//                5, // period
-//                TimeUnit.MINUTES
-//        );
+        metadataService.scheduler.scheduleAtFixedRate(
+                metadataService::checkWorkerNodeHealth,
+                0, // initial delay
+                5, // period
+                TimeUnit.MINUTES
+        );
     }
 
 }

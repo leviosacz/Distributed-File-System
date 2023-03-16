@@ -217,23 +217,30 @@ public class MetadataService {
         List<UUID> chunkIds = new ArrayList<>(chunkWorkerNodeIdMap.keySet());
         for (UUID chunkId : chunkIds) {
           List<String> workerNodeIds = chunkWorkerNodeIdMap.get(chunkId);
-          if (workerNodeIds.contains(nodeId)) {
-            // Replicate the chunk to another worker node with the largest available space
-            WorkerNode node2 = getWorkerNodeWithLargestAvailableSpace();
-            if (node2 == null) {
-              System.out.println("No worker node available for replication");
-              continue;
-            }
-            long chunkSize = chunkMetadataMap.get(chunkId).getChunkSize();
-            boolean isReplicated = workerNode.replicateChunk(chunkId, node2.getNodeId(), chunkSize);
-            if (isReplicated) {
-              // Update the mapping in MetadataService
-              workerNodeIds.remove(nodeId);
-              workerNodeIds.add(node2.getNodeId());
-              chunkWorkerNodeIdMap.put(chunkId, workerNodeIds);
-            }
-          }
+          workerNodeIds.remove(nodeId);
+          chunkWorkerNodeIdMap.put(chunkId, workerNodeIds);
         }
+
+//        // These are with chunk replication in the case of worker node failure
+//        for (UUID chunkId : chunkIds) {
+//          List<String> workerNodeIds = chunkWorkerNodeIdMap.get(chunkId);
+//          if (workerNodeIds.contains(nodeId)) {
+//            // Replicate the chunk to another worker node with the largest available space
+//            WorkerNode node2 = getWorkerNodeWithLargestAvailableSpace();
+//            if (node2 == null) {
+//              System.out.println("No worker node available for replication");
+//              continue;
+//            }
+//            long chunkSize = chunkMetadataMap.get(chunkId).getChunkSize();
+//            boolean isReplicated = workerNode.replicateChunk(chunkId, node2.getNodeId(), chunkSize);
+//            if (isReplicated) {
+//              // Update the mapping in MetadataService
+//              workerNodeIds.remove(nodeId);
+//              workerNodeIds.add(node2.getNodeId());
+//              chunkWorkerNodeIdMap.put(chunkId, workerNodeIds);
+//            }
+//          }
+//        }
       }
     }
   }
