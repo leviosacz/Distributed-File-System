@@ -46,11 +46,17 @@ public class MetadataService {
       UUID chunkId = chunkMetadata.getChunkId();
       chunkIds.add(chunkId);
       List<String> workerNodeIds = chunkMetadata.getWorkerNodeIds();
-      chunkWorkerNodeIdMap.put(chunkId, workerNodeIds);
+      if (workerNodeIds != null && !workerNodeIds.isEmpty()) {
+        chunkWorkerNodeIdMap.put(chunkId, workerNodeIds);
+      }
     }
     fileChunkMap.put(fileName, chunkIds);
 
     fileMetadata.setChunkSize(chunkSize);
+
+    // Check for empty workerNodeIds list or null value and remove it from the map
+    chunkWorkerNodeIdMap.entrySet().removeIf(entry -> entry.getValue() == null || entry.getValue().isEmpty());
+
     fileMetadata.setChunkWorkerNodeIdMap(chunkWorkerNodeIdMap);
 
     FileMetadataWithMap result = new FileMetadataWithMap(
